@@ -23,7 +23,8 @@
                     <img src="https://frontend-1.adjust.com/new-assets/images/site-images/interface/user.svg" class="col s4">
                     <div class="col s8">
                     <span class="title" style="font-weight: bolder">{{ user.username }}</span>
-                    </div>
+                   
+                </div>
                 </a>
                 {% endfor %}
             </div>
@@ -55,6 +56,7 @@
     </div>
     {% load static %}
     <script src="{% static 'js/chat.js' %}"></script>
+    
     <script>
         // For receiving
         sender_id = "{{ receiver.id }}";
