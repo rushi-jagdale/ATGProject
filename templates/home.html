@@ -33,7 +33,21 @@
             <button class="btn btn-warning mr-5" type="submit">Search</button>
           </form>
            {% if user.is_authenticated %}
-           <a class="nav-link text-white"  href="">{{request.user}}</a>
+          
+         
+          {% if image %}
+          {% for i in image %}
+           <a href="#" class="rounded-circle" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">
+            <img src="{{i.photo.url}}" class="rounded-circle w-40" height="40" alt="User Image">
+            <span class="d-none d-md-inline text-white">{{request.user}}</span>
+          </a>
+         {%endfor%}
+         {%else%}
+         <a href="#" class="rounded-circle" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">
+          <img src="/static/dist/img/user2-160x160.jpg" class="rounded-circle w-40" height="40" alt="User Image">
+          <span class="d-none d-md-inline text-white">{{request.user}}</span>
+        </a>
+        {%endif%}
             <a class="nav-link text-white" href="{% url 'logout' %}">Logout</a>
             {% else %}
 
@@ -42,7 +56,48 @@
             {%endif%}
         </div>
       </nav>
-    
+      
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel ">{{request.user}}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+ 
+                
+              {% for i in image %}
+               
+                <div class="form-group">
+                  <!-- <img src="media/img/rushi.jpeg" class="rounded-circle " style="margin-left: 150px;" height="150" alt="User Image"> -->
+                  <img src="{{i.photo.url}}" class="rounded-circle " style="margin-left: 150px;" height="150" alt="User Image">
+                </div>
+                <div class="form-group">
+                  <label for="message-text" class="col-form-label ml-5">FullName :</label>
+                <input type="text" value="{{i.fullname}}" class="form-control" >
+                </div>
+             
+            {%endfor%}
+             
+              
+            </div>
+            {%if image%}
+            <div class="modal-footer">
+              <a href="{% url 'profile' %}" class="btn btn-primary">Edit</a>
+              
+            </div>
+            {%else%}
+            <div class="modal-footer">
+              <a href="{% url 'profile' %}" class="btn btn-primary">ADD</a>
+              
+            </div>
+            {%endif%}
+          </div>
+        </div>
+      </div>
       {% if user.is_authenticated %}
       <h4 class="text-center mt-4 text-primary">User Deatails </h4>
       <table class="table table-striped mt-5">

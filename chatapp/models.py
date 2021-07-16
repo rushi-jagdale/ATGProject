@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.fields.files import ImageField
 
 
 class Message(models.Model):
@@ -16,3 +17,10 @@ class Message(models.Model):
         ordering = ('timestamp',)
 
 
+class Profile(models.Model):
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    fullname = models.CharField(max_length=50)
+    photo = models.ImageField(upload_to='img/') 
+  
+  

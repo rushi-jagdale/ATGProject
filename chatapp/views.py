@@ -4,12 +4,12 @@ from django.http.response import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from chatapp.models import Message
+from chatapp.models import Message,Profile
 from chatapp.forms import UpdateForm
 from django.contrib import messages 
 from chatapp.serializers import MessageSerializer, UserSerializer
 import random
-
+from .forms import *
 
 
 
@@ -37,36 +37,16 @@ def message_list(request, sender=None, receiver=None):
         return JsonResponse(serializer.errors, status=400)
 
 
-def register_view(request):
-    """
-    Render registration template
-    """
-    if request.method == 'POST':
-        print("working1")
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
-            user.set_password(password)
-            user.save()
-        return render(request, 'reg.html', {'form': form})
-     
-    #         user = authenticate(username=username, password=password)
-    #         if user is not None:
-    #             if user.is_active:
-    #                 login(request, user)
-    #                 return redirect('chats')
-    # else:
-    #     print("working2")
-    #     form = SignUpForm()
-    # template = 'register.html'
-    # context = {'form':form}
-    # return render(request, template, context)
+
 def home(request):
     name = request.user
     data = User.objects.filter(username=name)
-    return render(request,'home.html',{'data':data})    
+
+    image = Profile.objects.filter(user=name)
+    print(image)
+   
+   
+    return render(request,'home.html',{'data':data,'image':image})    
 
 def login(request):
     
@@ -186,7 +166,35 @@ def update(request, id):
 #         p = form.is_valid()
 #         #print('in this update',p)
         
+# def profile(request):
 
+#     if request.method == 'POST':
+#         u = request.POST['user']
+#         fullname = request.POST['fullname']
+#         photo = request.POST.get('photo')
+#         user = Profile.objects.create(user=u,fullname=fullname,photo=photo)
+#         user.save()
+#         messages.info(request, 'Profile Added Successfully ..')
+#         return redirect('profile')
+
+#     return render(request,'profile.html')   
+
+
+def profile(request):
+    """Process images uploaded by users"""
+   
+    if request.method == 'POST':
+        
+        form =ProfileForm(request.POST,request.FILES)
+        if form.is_valid():
+            messages.info(request, 'Profile Added Successfully ..')
+            form.save()
+            # Get the current instance object to display in the template
+            return redirect('home')   
+
+    else:
+        form = ProfileForm()
+    return render(request, 'profile.html', {'form': form})   
 
 def logout(request):
     auth.logout(request)
